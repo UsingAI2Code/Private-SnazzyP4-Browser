@@ -1,4 +1,4 @@
-<b>Thank you to https://github.com/snazzysosnazzy/SnazzyP4 and the user snazzysosnazzy for creating the original repository. Thank you to https://wtfdig.info/tools/p4-helper for the idea on the Two Columns for Desktop browsers.</b>
+<b>Thank you to https://github.com/snazzysosnazzy/SnazzyP4 and the user snazzysosnazzy for creating the original repository. And thank you to https://wtfdig.info/tools/p4-helper for the idea on the Two Columns for Desktop browsers.</b>
 
 <br><br>
 Link to the tool: https://usingai2code.github.io/Private-SnazzyP4-Browser/
