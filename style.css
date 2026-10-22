@@ -1,0 +1,99 @@
+
+:root{color-scheme:dark;font-family:system-ui,-apple-system,sans-serif;background:#0b1020;color:#edf2ff}*{box-sizing:border-box}body{margin:0;padding:16px 14px 60px;max-width:720px;margin-inline:auto}header{display:flex;align-items:center;justify-content:space-between;gap:12px}h1{font-size:1.4rem;margin:8px 0}h2{font-size:1rem;margin:0 0 12px;color:#dce5ff}.sub{font-size:.79rem;color:#aebbd4;margin:5px 0 15px}.panel{background:#171f34;border:1px solid #2c3853;border-radius:16px;padding:16px;margin:12px 0}.row{display:flex;gap:8px;flex-wrap:wrap}.pair{display:grid;grid-template-columns:1fr 1fr;gap:9px}.mechanic{display:grid;grid-template-columns:1.1fr 1fr 1fr;align-items:center;gap:8px;margin:10px 0}.mechanic.simple{grid-template-columns:1.1fr 1fr}.mechanic label{font-weight:600;font-size:.92rem}button,select{border:1px solid #465575;background:#273653;color:white;border-radius:11px;padding:12px 9px;font-size:.94rem;font-weight:650;min-height:49px;cursor:pointer}button:active{transform:scale(.98)}button:disabled{opacity:.3;cursor:default}button.chosen{background:#315e87;border-color:#79baf2}button.danger{background:#4c2939}.iconbtn{display:flex;align-items:center;justify-content:center;gap:6px}.iconbtn img{width:29px;height:29px;object-fit:contain}.resultgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result{background:#0d1529;border:1px solid #36425e;border-radius:12px;padding:12px;min-height:125px}.result h3{font-size:.86rem;margin:0 0 9px;color:#aebde0}.line{font-weight:750;margin:9px 0;line-height:1.35}.dim{color:#7786a6}.cyan{color:#7cd4fa}.orange{color:#ffb77c}.purple{color:#c5a2ff}.green{color:#8de6b3}.yellow{color:#ffe18a}.controls{display:flex;gap:8px}.controls button{flex:1}.small{font-size:.78rem;color:#9ba9c4}select{min-width:130px}input[type=checkbox]{width:20px;height:20px;vertical-align:middle;accent-color:#73b7ff}footer{font-size:.75rem;color:#93a0b9;line-height:1.5}@media(max-width:390px){.mechanic{gap:4px}.iconbtn img{width:24px;height:24px}button{font-size:.84rem;padding:9px 5px}.panel{padding:12px}} 
+
+/* Compact mobile raid dashboard: prioritize 393x852 viewport */
+@media(max-width:600px){
+ html,body{min-height:100%;} body{padding:6px 8px 8px;max-width:500px}
+ header{height:33px}h1{font-size:1rem;margin:0}h2{font-size:.79rem;margin:0 0 5px}
+ .panel{padding:7px 9px;margin:5px 0;border-radius:10px}
+ button,select{min-height:31px;padding:4px 6px;border-radius:7px;font-size:.73rem}
+ select{min-width:0}.row{gap:8px;align-items:center}.setup h2{display:none}
+ .setup{padding:4px 8px}.setup .row{justify-content:space-between}.setup label{font-size:.72rem}
+ input[type=checkbox]{width:13px;height:13px}
+ .pair{gap:5px}.mechanic,.mechanic.simple{margin:3px 0;gap:5px}
+ .mechanic label{font-size:.75rem}.iconbtn{gap:4px}.iconbtn img{width:20px;height:20px}
+ .small{font-size:.65rem;margin:3px 0}
+ .resultgrid{gap:6px}.result{padding:6px;min-height:0;border-radius:7px}.result h3{font-size:.7rem;margin:0 0 3px}
+ .line{font-size:.74rem;margin:3px 0;line-height:1.22}
+ .results-panel>.result{margin-top:5px!important}
+ .controls{gap:6px;margin-top:5px}.controls button{min-height:33px}
+}
+@media(max-width:600px) and (max-height:740px){
+ .panel{margin:3px 0;padding:5px 8px}.mechanic,.mechanic.simple{margin:2px 0}
+ button,select{min-height:29px}.iconbtn img{width:18px;height:18px}
+}
+
+.extra-result{margin-top:10px}.hidden{display:none}
+
+/* v3: icon-first raid inputs, no mechanic-name column */
+.mechanic.icon-only{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:6px 0}
+.mechanic.icon-only.debuff-row.simple{grid-template-columns:minmax(0,1fr)}
+.mechanic.icon-only button{width:100%;justify-content:center}
+.mechanic.icon-only.debuff-row button{min-height:43px}
+.mechanic.icon-only .iconbtn img{width:31px;height:31px}
+@media(max-width:600px){
+ .mechanic.icon-only{gap:6px;margin:4px 0}
+ .mechanic.icon-only button{min-height:37px;font-size:.76rem}
+ .mechanic.icon-only.debuff-row button{min-height:41px}
+ .mechanic.icon-only .iconbtn img{width:29px;height:29px}
+}
+
+/* v4: three equally-sized debuff inputs, matching original top-to-bottom order. */
+#debuffs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+#debuffs .debuff-row.simple{display:block;margin:0;min-width:0}
+#debuffs .debuff-row.simple button{width:100%;min-height:66px;padding:5px;display:flex;align-items:center;justify-content:center}
+#debuffs .debuff-row.simple .iconbtn img{width:54px;height:54px;max-width:100%;object-fit:contain;aspect-ratio:1}
+@media(max-width:600px){#debuffs{gap:5px}#debuffs .debuff-row.simple button{min-height:65px;padding:4px}#debuffs .debuff-row.simple .iconbtn img{width:55px;height:55px}}
+/* Classic mode retains two short/long buttons per debuff; avoid forcing that mode into thirds. */
+#debuffs:has(.debuff-row:not(.simple)){display:block}
+
+/* v5: free vertical space for Exdeath controls while keeping debuffs in thirds */
+@media(max-width:600px){
+ #exbuttons button{min-height:39px;padding:5px 7px;font-size:.76rem}
+ #exbuttons .iconbtn img{width:29px;height:29px;object-fit:contain}
+ #debuffs .debuff-row.simple button{min-height:46px;height:46px;padding:4px}
+ #debuffs .debuff-row.simple .iconbtn img{width:36px;height:36px;max-height:100%;object-fit:contain;aspect-ratio:1}
+}
+
+/* v5 adjustment: restore full-size debuff icons and omit stage helper text */
+@media(max-width:600px){
+ .exdeath .debuff-heading{margin:5px 0 4px}
+ #debuffs .debuff-row.simple button{height:65px;min-height:65px;padding:4px}
+ #debuffs .debuff-row.simple .iconbtn img{width:55px;height:55px;max-height:100%;object-fit:contain;aspect-ratio:1}
+}
+
+/* v8: resolution-specific colors; all debuff copy white except designated tokens. */
+.debuff-text{color:#fff}.letter-a{color:#ff666b}.letter-d{color:#c5a2ff}.letter-b{color:#ffe18a}.letter-c{color:#7cd4fa}.move-green{color:#ff85c8}.still-red{color:#ff666b}
+
+/* v9: encounter-specific resolution colors */
+.inferno-red{color:#ff666b}.tsunami-blue{color:#7cd4fa}.thunder-purple{color:#c5a2ff}
+
+/* v10: completion focus toggle and enlarged mobile resolutions */
+.header-options{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hide-complete-label{display:flex;align-items:center;gap:5px;font-size:.72rem;line-height:1.2;white-space:nowrap;cursor:pointer}
+.hide-complete-label input{margin:0;flex-shrink:0}
+/* This must override .extra-result's own display rules when sections are hidden. */
+.panel.hidden{display:none}
+@media(max-width:600px){
+ header{height:auto;min-height:46px;align-items:flex-start}
+ .header-options select{align-self:flex-end}
+ .hide-complete-label{font-size:.65rem}
+ body.completed-focus .results-panel{padding:12px 12px 14px}
+ body.completed-focus .results-panel>h2{font-size:1rem;margin-bottom:9px}
+ body.completed-focus .resultgrid{gap:9px}
+ body.completed-focus .result{padding:10px;min-height:82px}
+ body.completed-focus .result h3{font-size:.8rem;margin-bottom:6px}
+ body.completed-focus .line{font-size:.98rem;line-height:1.35;margin:6px 0}
+ body.completed-focus .extra-result{margin-top:9px!important}
+ body.completed-focus .controls button{min-height:43px;font-size:.86rem}
+}
+
+/* v10 layout refinement: completion option lives inside Setup, right aligned. */
+.setup .row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.setup .hide-complete-label{margin-left:auto;text-align:right;font-weight:400}
+@media(max-width:600px){
+ header{height:33px;min-height:33px;align-items:center}
+ .setup .row{flex-wrap:nowrap}
+ .setup .row>label:first-child{white-space:nowrap}
+ .setup .hide-complete-label{white-space:normal;justify-content:flex-end;max-width:65%;font-size:.65rem}
+}

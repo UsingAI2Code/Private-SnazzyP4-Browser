@@ -1,0 +1,32 @@
+
+const $=id=>document.getElementById(id),blank=()=>({phase:0,ex:[],picks:[],chaos:{},kefka:{}});let state=blank(),history=[];let settings={};try{settings=JSON.parse(localStorage.getItem('snazzy-settings-v4')||'{}')}catch{settings={}};$('mode').value=settings.mode||'simple';$('role').value=settings.role||'support';$('hideComplete').checked=settings.hideComplete===true;
+function save(){localStorage.setItem('snazzy-settings-v4',JSON.stringify({mode:$('mode').value,role:$('role').value,hideComplete:$('hideComplete').checked}))}
+function act(fn){history.push(JSON.stringify(state));fn();render()}function button(label,callback,disabled=false,chosen=false,img=''){let b=document.createElement('button');b.disabled=disabled;b.className=(chosen?'chosen ':'')+(img?'iconbtn':'');if(img){let im=document.createElement('img');im.src=img+'.png';b.append(im)}if(label)b.append(document.createTextNode(label));if(img)b.setAttribute('aria-label',label||img);b.onclick=callback;return b}
+function line(t,cls=''){let d=document.createElement('div');d.className='line '+cls;d.textContent=t;return d}
+// Render highlighted resolution tokens without inserting HTML from strings.
+function coloredLine(parts,cls=''){let d=document.createElement('div');d.className='line '+cls;for(const [value,color] of parts){let span=document.createElement('span');span.textContent=value;if(color)span.className=color;d.append(span)}return d}
+function debuffLine(text){let match=text.match(/^(.*\bon )([ADBC])$/);if(match)return coloredLine([[match[1],null],[match[2],{A:'letter-a',D:'letter-d',B:'letter-b',C:'letter-c'}[match[2]]]],'debuff-text');return line(text,'debuff-text')}
+function movementLine(text){let marker=text.match(/^(.*?)(STAND STILL|MOVE)$/);if(marker)return coloredLine([[marker[1],null],[marker[2],marker[2]==='MOVE'?'move-green':'still-red']],'debuff-text');return debuffLine(text)}
+function combinedDebuffLine(text,movement){let d=debuffLine(text);if(movement){d.append(document.createTextNode(' and '));let span=document.createElement('span');span.className=movement==='MOVE'?'move-green':'still-red';span.textContent=movement;d.append(span)}return d}
+function render(){
+const simple=$('mode').value==='simple',role=$('role').value,phase=state.phase;save();
+const fullyComplete=phase>=4&&('inferno' in state.chaos)&&('tsunami' in state.chaos);
+const compact=$('hideComplete').checked&&fullyComplete;
+document.body.classList.toggle('completed-focus',compact);
+document.querySelector('.exdeath').classList.toggle('hidden',compact);
+document.querySelector('.chaos-panel').classList.toggle('hidden',compact);
+$('exheading').textContent=phase<2?'1st Exdeath':phase<4?'2nd Exdeath':'Exdeath Complete';$('exbuttons').replaceChildren();
+for(let real of [true,false])$('exbuttons').append(button(real?'REAL':'FAKE',()=>act(()=>{state.ex.push(real);state.phase++}),phase!==0&&phase!==2,false,real?'RealExdeath':'FakeExdeath'));
+$('debuffs').replaceChildren();const bodyPicked=state.picks.some(p=>p.kind!=='acceleration'),accPicked=state.picks.some(p=>p.kind==='acceleration');
+for(let kind of ['lightning','drop','acceleration']){let row=document.createElement('div');row.className='mechanic icon-only debuff-row'+(simple?' simple':'');for(let short of (simple?[true]:[true,false])){let picked=state.picks.some(p=>p.kind===kind&&p.short===short);row.append(button(simple?'':short?'SHORT':'LONG',()=>act(()=>{state.picks.push({kind,short,real:state.ex[state.ex.length-1]});state.phase++}),!(phase===1||phase===3)||(kind==='acceleration'?accPicked:bodyPicked),picked,kind==='lightning'?'Lightning':kind==='drop'?'Drop':'Acceleration'))}$('debuffs').append(row)}
+
+$('chaos').replaceChildren();for(let kind of ['inferno','tsunami']){let row=document.createElement('div');row.className='mechanic icon-only';for(let real of [true,false])row.append(button(real?'REAL':'FAKE',()=>act(()=>state.chaos[kind]=real),kind in state.chaos,state.chaos[kind]===real, (real?'':'Fake')+(kind==='inferno'?'Inferno':'Tsunami')));$('chaos').append(row)}
+$('kefka').replaceChildren();for(let kind of ['thunder','blizzard']){let row=document.createElement('div');row.className='mechanic icon-only';for(let real of [true,false])row.append(button(real?'REAL':'FAKE',()=>act(()=>state.kefka[kind]=real),kind in state.kefka,state.kefka[kind]===real,(real?'':'Fake')+(kind==='thunder'?'Thunder':'Blizzard')));$('kefka').append(row)}
+const result=(spread)=>`${spread?'Spread':'Stack'} on ${role==='support'?(spread?'D':'A'):(spread?'B':'C')}`;
+function bodySpread(p){return p.kind==='lightning'?p.real:!p.real}
+for(let index=0;index<2;index++){let target=$(index?'second':'first');target.replaceChildren();let picks=state.picks.filter(p=>p.short===(index===0));let body=picks.find(p=>p.kind!=='acceleration'),acc=picks.find(p=>p.kind==='acceleration');if(!simple){let txt=body?result(bodySpread(body)):phase===4?result(false):null;let movement=acc?(acc.real?'STAND STILL':'MOVE'):null;if(txt)target.append(combinedDebuffLine(txt,movement));if(movement&&!txt)target.append(movementLine(movement))}
+if(state.ex.length>index)target.append(line(state.ex[index]?'Gaze REAL / LOOK AWAY':'Gaze FAKE / LOOK',state.ex[index]?'green':'orange'));let kind=index?'tsunami':'inferno';if(kind in state.chaos){let real=state.chaos[kind];target.append(line(kind.toUpperCase()+' '+(kind==='inferno'?(real?'TWISTER':'DONUT'):(real?'DONUT':'TWISTER')),kind==='inferno'?'inferno-red':'tsunami-blue'))}if(!target.children.length)target.append(line('—','dim'))}
+$('extra').replaceChildren();for(let kind of ['thunder','blizzard']){if(kind in state.kefka){let effective=state.kefka[kind];$('extra').append(line(kind.toUpperCase()+' '+(effective?'REAL':'FAKE'),kind==='thunder'?'thunder-purple':'cyan'))}}if(!$('extra').children.length)$('extra').append(line('—','dim'));
+$('simplePanel').classList.toggle('hidden',!simple);$('simpleResults').replaceChildren();if(simple){for(let p of state.picks)$('simpleResults').append(p.kind==='acceleration'?movementLine(p.real?'Acceleration - STAND STILL':'Acceleration - MOVE'):debuffLine((p.kind==='lightning'?'Lightning':'Drop')+' - '+result(bodySpread(p))));if(!state.picks.length)$('simpleResults').append(line('—','dim'))}
+$('undo').disabled=!history.length}
+$('undo').onclick=()=>{if(history.length){state=JSON.parse(history.pop());render()}};$('reset').onclick=()=>{state=blank();history=[];render()};$('mode').onchange=()=>{state=blank();history=[];render()};$('role').onchange=render;$('hideComplete').onchange=render;render();
