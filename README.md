@@ -18,4 +18,4 @@ Settings are as follows (defaults change once your browser cache updates):
 <br><br>
 Please note that I created this specifically for my co-heal to try out with their phone. I had a friend that said they use their phone with the wtfdig helper and so I wanted something more mobile friendly. <i>Also yes, AI was used to help convert the original repo to this browser version.</i>
 
-Have a wonderful day! :)
+If you choose to use this or not, in any case, have a wonderful day! :)
