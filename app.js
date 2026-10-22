@@ -1,6 +1,6 @@
 
-const $=id=>document.getElementById(id),blank=()=>({phase:0,ex:[],picks:[],chaos:{},kefka:{}});let state=blank(),history=[];let settings={};try{settings=JSON.parse(localStorage.getItem('snazzy-settings-v4')||'{}')}catch{settings={}};$('mode').value=settings.mode||'simple';$('role').value=settings.role||'support';$('hideComplete').checked=settings.hideComplete===true;
-function save(){localStorage.setItem('snazzy-settings-v4',JSON.stringify({mode:$('mode').value,role:$('role').value,hideComplete:$('hideComplete').checked}))}
+const $=id=>document.getElementById(id),blank=()=>({phase:0,ex:[],picks:[],chaos:{},kefka:{}});let state=blank(),history=[];let settings={};try{settings=JSON.parse(localStorage.getItem('snazzy-settings-v4')||'{}')}catch{settings={}};$('mode').value=settings.mode||'simple';$('role').value=settings.role||'support';$('hideComplete').checked=settings.hideComplete===true;$('layout').value=settings.layout==='one'?'one':'two';
+function save(){localStorage.setItem('snazzy-settings-v4',JSON.stringify({mode:$('mode').value,role:$('role').value,hideComplete:$('hideComplete').checked,layout:$('layout').value}))}
 function act(fn){history.push(JSON.stringify(state));fn();render()}function button(label,callback,disabled=false,chosen=false,img=''){let b=document.createElement('button');b.disabled=disabled;b.className=(chosen?'chosen ':'')+(img?'iconbtn':'');if(img){let im=document.createElement('img');im.src=img+'.png';b.append(im)}if(label)b.append(document.createTextNode(label));if(img)b.setAttribute('aria-label',label||img);b.onclick=callback;return b}
 function line(t,cls=''){let d=document.createElement('div');d.className='line '+cls;d.textContent=t;return d}
 // Render highlighted resolution tokens without inserting HTML from strings.
@@ -11,7 +11,16 @@ function combinedDebuffLine(text,movement){let d=debuffLine(text);if(movement){d
 function render(){
 const simple=$('mode').value==='simple',role=$('role').value,phase=state.phase;save();
 const fullyComplete=phase>=4&&('inferno' in state.chaos)&&('tsunami' in state.chaos);
-const compact=$('hideComplete').checked&&fullyComplete;
+const twoColumn=window.matchMedia('(min-width: 601px)').matches&&$('layout').value==='two';document.body.classList.toggle('two-columns',twoColumn);
+// The Simple two-column layout keeps all encounters together on the left,
+// and the action buttons directly below Resolutions on the right.
+const twoSimple=twoColumn&&simple;
+document.body.classList.toggle('two-columns-simple',twoSimple);
+const left=document.querySelector('.encounter-left'),right=document.querySelector('.encounter-right');
+const kefka=document.querySelector('.kefka-panel'),controls=document.querySelector('.controls');
+if(twoSimple){left.append(kefka);right.append(controls)}
+else{right.insertBefore(kefka,document.querySelector('.results-panel'));document.body.append(controls)}
+const compact=!twoColumn&&$('hideComplete').checked&&fullyComplete;
 document.body.classList.toggle('completed-focus',compact);
 document.querySelector('.exdeath').classList.toggle('hidden',compact);
 document.querySelector('.chaos-panel').classList.toggle('hidden',compact);
@@ -29,4 +38,4 @@ if(state.ex.length>index)target.append(line(state.ex[index]?'Gaze REAL / LOOK AW
 $('extra').replaceChildren();for(let kind of ['thunder','blizzard']){if(kind in state.kefka){let effective=state.kefka[kind];$('extra').append(line(kind.toUpperCase()+' '+(effective?'REAL':'FAKE'),kind==='thunder'?'thunder-purple':'cyan'))}}if(!$('extra').children.length)$('extra').append(line('—','dim'));
 $('simplePanel').classList.toggle('hidden',!simple);$('simpleResults').replaceChildren();if(simple){for(let p of state.picks)$('simpleResults').append(p.kind==='acceleration'?movementLine(p.real?'Acceleration - STAND STILL':'Acceleration - MOVE'):debuffLine((p.kind==='lightning'?'Lightning':'Drop')+' - '+result(bodySpread(p))));if(!state.picks.length)$('simpleResults').append(line('—','dim'))}
 $('undo').disabled=!history.length}
-$('undo').onclick=()=>{if(history.length){state=JSON.parse(history.pop());render()}};$('reset').onclick=()=>{state=blank();history=[];render()};$('mode').onchange=()=>{state=blank();history=[];render()};$('role').onchange=render;$('hideComplete').onchange=render;render();
+$('undo').onclick=()=>{if(history.length){state=JSON.parse(history.pop());render()}};$('reset').onclick=()=>{state=blank();history=[];render()};$('mode').onchange=()=>{state=blank();history=[];render()};$('role').onchange=render;$('hideComplete').onchange=render;$('layout').onchange=render;window.addEventListener('resize',render);render();

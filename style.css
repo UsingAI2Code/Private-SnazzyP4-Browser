@@ -97,3 +97,50 @@
  .setup .row>label:first-child{white-space:nowrap}
  .setup .hide-complete-label{white-space:normal;justify-content:flex-end;max-width:65%;font-size:.65rem}
 }
+
+/* v1.1: Desktop-only layout selection, with a centered setup/controls column. */
+body{display:flex;flex-direction:column}
+.top-zone,.encounter-grid,.encounter-left,.encounter-right{display:contents}
+header{order:1}.setup{order:2}.exdeath{order:3}.chaos-panel{order:4}.kefka-panel{order:5}.results-panel{order:6}.controls{order:7}
+#layout{display:none}
+@media(min-width:601px){
+ #layout{display:block}
+ .header-options{flex-direction:row;align-items:center;gap:8px}
+ body.two-columns{display:block;max-width:1320px;width:100%;margin:0 auto}
+ body.two-columns .top-zone{display:flex;flex-direction:column;max-width:650px;margin:0 auto 12px}
+ body.two-columns .top-zone header,body.two-columns .top-zone .setup{width:100%}
+ body.two-columns > .controls{max-width:650px;width:100%;margin:12px auto 0}
+ body.two-columns .encounter-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+ body.two-columns .encounter-left,body.two-columns .encounter-right{display:flex;flex-direction:column;min-width:0}
+ body.two-columns .encounter-grid .panel{width:100%}
+ body.two-columns .hide-complete-label{display:none}
+}
+
+/* v1.1 release layout adjustment: compact title and header completion toggle. */
+header{justify-content:space-between;min-width:0;gap:8px}
+header h1{font-size:.78rem;line-height:1.2;display:flex;align-items:center;gap:3px;white-space:nowrap;flex-shrink:0;margin:0}
+.title-bolt{font-size:1rem;line-height:1}
+header .hide-complete-label{margin-left:auto;text-align:right;justify-content:flex-end;font-size:.72rem;white-space:normal;max-width:65%}
+.setup .row{display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:6px}
+.setup .role-label{white-space:nowrap;flex-shrink:0}
+.setup-options{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-left:auto;min-width:0}
+.setup-options select{min-width:0}
+#layout{display:none}
+@media(min-width:601px){#layout{display:block}}
+@media(max-width:600px){
+ header{height:auto;min-height:33px;align-items:center}
+ header h1{font-size:.65rem}
+ .title-bolt{font-size:.83rem}
+ header .hide-complete-label{font-size:.65rem;max-width:63%}
+ .setup-options{gap:4px}
+ .setup-options select{font-size:.72rem}
+}
+@media(max-width:360px){header h1{font-size:.59rem}.title-bolt{font-size:.74rem}header .hide-complete-label{font-size:.58rem}}
+/* In two-column desktop mode, the header checkbox is intentionally hidden. */
+@media(min-width:601px){body.two-columns header .hide-complete-label{display:none}}
+
+/* v1.1: two-column Simple only; right-column actions follow Resolutions. */
+@media(min-width:601px){
+ body.two-columns-simple .encounter-right > .controls{display:flex;width:100%;margin:0 0 12px;gap:8px}
+ body.two-columns-simple .encounter-right > .controls button{flex:1;min-width:0}
+}
