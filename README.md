@@ -1,5 +1,9 @@
-Thank you to https://github.com/snazzysosnazzy/SnazzyP4 and the user snazzysosnazzy for creating the original repository. Thank you to https://wtfdig.info/tools/p4-helper for the idea on the Two Columns for Desktop browsers.
+<b>Thank you to https://github.com/snazzysosnazzy/SnazzyP4 and the user snazzysosnazzy for creating the original repository. Thank you to https://wtfdig.info/tools/p4-helper for the idea on the Two Columns for Desktop browsers.</b>
 
+<br><br>
+Link to the tool: https://usingai2code.github.io/Private-SnazzyP4-Browser/
+
+<br>
 Settings are as follows (defaults change once your browser cache updates):
 
 <b>Role (Support or DPS)</b>
@@ -12,6 +16,6 @@ Settings are as follows (defaults change once your browser cache updates):
   <ul><li>When you complete the Exdeath and Chaos Debuffs, they will hide from view so only Kefka and Resolutions will show. This is only for the One Column view as it can be difficult to see the Resolutions on Desktop or Mobile browsers. Defaults to unchecked</li></ul>
 
 <br><br>
-Please note that I created this for my co-heal to try out with their phone. I had a friend that said they use their phone with the wtfdig helper and so I wanted something more mobile friendly. <i>Also yes, AI was used to help convert the original repo to this browser version.</i>
+Please note that I created this specifically for my co-heal to try out with their phone. I had a friend that said they use their phone with the wtfdig helper and so I wanted something more mobile friendly. <i>Also yes, AI was used to help convert the original repo to this browser version.</i>
 
 Have a wonderful day! :)
